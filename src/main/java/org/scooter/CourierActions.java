@@ -1,5 +1,6 @@
 package org.scooter;
 
+import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -20,6 +21,7 @@ public class CourierActions {
         return "loqin_"+partLogin;
     }
 
+    @Step("Send POST request to /api/v1/courier")
     public Response createCourier(Courier data) {
         return given()
                 .contentType(ContentType.JSON)
@@ -30,6 +32,7 @@ public class CourierActions {
 
     }
 
+    @Step("Send POST request to /api/v1/courier/login")
     public Response loginCourier(Courier data) {
         return given()
                 .contentType(ContentType.JSON)
@@ -47,6 +50,7 @@ public class CourierActions {
         return 0;
     }
 
+    @Step("Send DELETE request to /api/v1/courier/")
     public void deleteCourier(int courierId){
         String data = String.format("{\"id\": \"%d\"}", courierId);
         given()
@@ -54,10 +58,9 @@ public class CourierActions {
             .baseUri(BASE_URI)
             .body(data)
             .when()
-            .delete("/api/v1/courier/login");
+            .delete("/api/v1/courier/" + courierId );
 
 
     }
-
 
 }

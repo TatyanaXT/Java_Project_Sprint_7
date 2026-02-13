@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 import org.scooter.Courier;
 import org.scooter.CourierActions;
 
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -21,7 +22,7 @@ public class LoginCourierTest {
 
 
     @BeforeAll
-    public static void CreateCourier() {
+    public static void createCourier() {
         Courier courier = new Courier(login, "str0nGPasw0rd", "Курьер");
         actions.createCourier(courier);
     }
@@ -32,13 +33,13 @@ public class LoginCourierTest {
             "- курьер может авторизоваться;\n" +
             "- для авторизации нужно передать все обязательные поля;\n" +
             "- успешный запрос возвращает id.")
-    public void LoginCourierWithAllParametersTest() {
+    public void loginCourierWithAllParametersTest() {
         Courier courier = new Courier(login, "str0nGPasw0rd");
 
         Response response = actions.loginCourier(courier);
         response.then().assertThat().body("id", notNullValue())
                 .and()
-                .statusCode(200);
+                .statusCode(SC_OK);
 
         courierId = response.path("id");
     }
@@ -48,49 +49,49 @@ public class LoginCourierTest {
     @Description("Проверка, что:\n" +
             "- система вернёт ошибку, если неправильно указать логин;\n" +
             "- если авторизоваться под несуществующим пользователем, запрос возвращает ошибку.")
-    public void LoginCourierWithInvalidLoginTest() {
+    public void loginCourierWithInvalidLoginTest() {
         Courier courier = new Courier(invalidLogin, "str0nGPasw0rd");
 
         Response response = actions.loginCourier(courier);
         response.then().assertThat().body("message", equalTo(loginWithInvalidDataError))
                 .and()
-                .statusCode(404);
+                .statusCode(SC_NOT_FOUND);
     }
 
     @Test
     @DisplayName("Логин курьера с неверным паролем")
     @Description("Проверка, что система вернёт ошибку, если неправильно указать пароль")
-    public void LoginCourierWithInvalidPasswordTest() {
+    public void loginCourierWithInvalidPasswordTest() {
         Courier courier = new Courier(login, invalidPassword);
 
         Response response = actions.loginCourier(courier);
         response.then().assertThat().body("message", equalTo(loginWithInvalidDataError))
                 .and()
-                .statusCode(404);
+                .statusCode(SC_NOT_FOUND);
     }
 
     @Test
     @DisplayName("Логин курьера без логина")
     @Description("Проверка, что если логина нет, запрос возвращает ошибку")
-    public void LoginCourierWithoutLoginTest() {
+    public void loginCourierWithoutLoginTest() {
         Courier courier = new Courier("", invalidPassword);
 
         Response response = actions.loginCourier(courier);
         response.then().assertThat().body("message", equalTo(loginWithoutDataError))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
     @Test
     @DisplayName("Логин курьера без пароля")
     @Description("Проверка, что если пароля нет, запрос возвращает ошибку")
-    public void LoginCourierWithoutPasswordTest() {
+    public void loginCourierWithoutPasswordTest() {
         Courier courier = new Courier(login, "");
 
         Response response = actions.loginCourier(courier);
         response.then().assertThat().body("message", equalTo(loginWithoutDataError))
                 .and()
-                .statusCode(400);
+                .statusCode(SC_BAD_REQUEST);
     }
 
 

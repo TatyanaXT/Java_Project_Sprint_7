@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.scooter.Order;
 import org.scooter.OrderActions;
 
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class GetOrdersListTest {
@@ -19,7 +20,7 @@ public class GetOrdersListTest {
         Response response = actions.getOrders(order);
         response.then().assertThat().body("orders", notNullValue())
                 .and()
-                .statusCode(200);
+                .statusCode(SC_OK);
     }
 
 }

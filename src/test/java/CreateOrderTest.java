@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static org.apache.http.HttpStatus.*;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class CreateOrderTest {
@@ -45,7 +46,7 @@ public class CreateOrderTest {
         Response response = actions.createOrder(order);
         response.then().assertThat().body("track", notNullValue())
                 .and()
-                .statusCode(201);
+                .statusCode(SC_CREATED);
 
     }
 }
